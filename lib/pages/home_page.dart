@@ -1,84 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../viewmodels/location_view_model.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends ConsumerWidget {
+  HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   final TextEditingController textEditingController = TextEditingController();
 
-  // 예시 검색 결과
-  final List<Map<String, String>> searchResults = [
-    {'title': '스타벅스 홍대점', 'category': '카페', 'roadAddress': '서울 마포구 양화로 123'},
-    {'title': '파리바게뜨 합정점', 'category': '베이커리', 'roadAddress': '서울 마포구 독막로 25'},
-  ];
-
-  void search(String keyword) {
-    print('검색어: $keyword');
-    // 실제 API 결과로 searchResults를 업데이트하려면 setState 사용
-    // setState(() {
-    //   searchResults = ...;
-    // });
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locations = ref.watch(locationViewModelProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: TextField(
-          maxLines: 1,
           controller: textEditingController,
-          onSubmitted: search,
+          onSubmitted: (value) {
+            ref.read(locationViewModelProvider.notifier).search(value);
+          },
           decoration: InputDecoration(
             hintText: '검색어를 입력해 주세요',
-            border: MaterialStateOutlineInputBorder.resolveWith((states) {
-              if (states.contains(WidgetState.focused)) {
-                return OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.black),
-                );
-              }
-              return OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.grey),
-              );
-            }),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.grey),
+            ),
           ),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: ListView.separated(
-          itemCount: searchResults.length,
+          itemCount: locations.length,
           separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
-            final item = searchResults[index];
+            final location = locations[index];
             return Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.blue[50],
+                color: Colors.blue[100],
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item['title'] ?? '',
+                    location.title,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   Text(
-                    item['category'] ?? '',
+                    location.category,
                     style: const TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 4),
-                  Text(item['roadAddress'] ?? ''),
+                  Text(location.roadAddress),
                 ],
               ),
             );
