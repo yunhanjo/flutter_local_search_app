@@ -27,6 +27,6 @@ class ReviewViewModel extends StateNotifier<List<Review>> {
       mapY: mapY,
       content: content,
     );
-    state = [...state, newReview]; // 새로운 리뷰를 현재 상태에 추가
+    state = [...state, newReview];
   }
 }
