@@ -20,7 +20,10 @@ class ReviewPage extends ConsumerWidget {
     final controller = TextEditingController();
 
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: Colors.deepPurple[100],
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -28,17 +31,40 @@ class ReviewPage extends ConsumerWidget {
               child: ListView.separated(
                 padding: const EdgeInsets.all(16),
                 itemCount: reviews.length,
-                separatorBuilder: (_, __) => const Divider(),
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final review = reviews[index];
-                  return ListTile(
-                    title: Text(review.content),
-                    subtitle: Text(review.createdAt.toLocal().toString()),
+                  return Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.deepPurple),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          review.content,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          review.createdAt.toLocal().toString(),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),
             ),
-            const Divider(height: 1),
+
+            const Divider(height: 5, color: Colors.deepPurple),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: Row(
@@ -47,7 +73,7 @@ class ReviewPage extends ConsumerWidget {
                     child: TextField(
                       controller: controller,
                       decoration: const InputDecoration(
-                        hintText: '리뷰를 작성해 주세요',
+                        hintText: '리뷰를 작성해주세요',
                         border: OutlineInputBorder(),
                       ),
                     ),

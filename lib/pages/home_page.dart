@@ -20,7 +20,7 @@ class HomePage extends ConsumerWidget {
             ref.read(locationViewModelProvider.notifier).search(value);
           },
           decoration: InputDecoration(
-            hintText: '검색어를 입력해 주세요',
+            hintText: '검색어를 입력해주세요',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(color: Colors.grey),
@@ -49,10 +49,10 @@ class HomePage extends ConsumerWidget {
                 );
               },
               child: Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.blue[100],
-                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.deepPurple[200],
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,12 +64,10 @@ class HomePage extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
                     Text(
                       location.category,
-                      style: const TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.white),
                     ),
-                    const SizedBox(height: 4),
                     Text(location.roadAddress),
                   ],
                 ),
