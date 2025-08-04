@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewmodels/location_view_model.dart';
+import '../pages/review_page.dart';
 
 class HomePage extends ConsumerWidget {
   HomePage({super.key});
@@ -34,30 +35,41 @@ class HomePage extends ConsumerWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final location = locations[index];
-            return Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    location.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        ReviewPage(mapX: location.mapx, mapY: location.mapy),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      location.title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    location.category,
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(location.roadAddress),
-                ],
+                    const SizedBox(height: 4),
+                    Text(
+                      location.category,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(location.roadAddress),
+                  ],
+                ),
               ),
             );
           },
