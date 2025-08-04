@@ -40,8 +40,11 @@ class HomePage extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) =>
-                        ReviewPage(mapX: location.mapx, mapY: location.mapy),
+                    builder: (_) => ReviewPage(
+                      mapX: location.mapx,
+                      mapY: location.mapy,
+                      title: location.title,
+                    ),
                   ),
                 );
               },

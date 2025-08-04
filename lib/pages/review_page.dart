@@ -1,71 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/review.dart';
 import '../viewmodels/review_view_model.dart';
-import 'package:uuid/uuid.dart';
 
 class ReviewPage extends ConsumerWidget {
   final double mapX;
   final double mapY;
+  final String title;
 
-  ReviewPage({required this.mapX, required this.mapY, super.key});
-
-  final TextEditingController _controller = TextEditingController();
+  const ReviewPage({
+    super.key,
+    required this.mapX,
+    required this.mapY,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reviews = ref.watch(reviewViewModelProvider);
+    final controller = TextEditingController();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('리뷰 목록')),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: reviews.length,
-              itemBuilder: (context, index) {
-                final review = reviews[index];
-                return ListTile(
-                  title: Text(review.content),
-                  subtitle: Text(review.createdAt.toString()),
-                );
-              },
+      appBar: AppBar(title: Text(title)),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.separated(
+                padding: const EdgeInsets.all(16),
+                itemCount: reviews.length,
+                separatorBuilder: (_, __) => const Divider(),
+                itemBuilder: (context, index) {
+                  final review = reviews[index];
+                  return ListTile(
+                    title: Text(review.content),
+                    subtitle: Text(review.createdAt.toLocal().toString()),
+                  );
+                },
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(hintText: '리뷰 작성'),
+            const Divider(height: 1),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: controller,
+                      decoration: const InputDecoration(
+                        hintText: '리뷰를 작성해 주세요',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () async {
-                    final content = _controller.text.trim();
-                    if (content.isEmpty) return;
-
-                    final newReview = Review(
-                      id: const Uuid().v4(),
-                      content: content,
-                      mapX: mapX,
-                      mapY: mapY,
-                      createdAt: DateTime.now(),
-                    );
-
-                    await ref
-                        .read(reviewViewModelProvider.notifier)
-                        .addReview(newReview);
-                    _controller.clear();
-                  },
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: () {
+                      final content = controller.text.trim();
+                      if (content.isNotEmpty) {
+                        ref
+                            .read(reviewViewModelProvider.notifier)
+                            .addReview(
+                              mapX: mapX,
+                              mapY: mapY,
+                              content: content,
+                            );
+                        controller.clear();
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

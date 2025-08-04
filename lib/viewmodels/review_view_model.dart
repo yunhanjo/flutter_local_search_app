@@ -12,13 +12,21 @@ class ReviewViewModel extends StateNotifier<List<Review>> {
 
   final _repository = ReviewRepository();
 
-  Future<void> loadReviews(double mapX, double mapY) async {
-    final reviews = await _repository.fetchReviews(mapX, mapY);
-    state = reviews;
+  Future<void> loadReviews({required double mapX, required double mapY}) async {
+    final result = await _repository.getReviews(mapX: mapX, mapY: mapY);
+    state = result;
   }
 
-  Future<void> addReview(Review review) async {
-    await _repository.addReview(review);
-    state = [...state, review];
+  Future<void> addReview({
+    required double mapX,
+    required double mapY,
+    required String content,
+  }) async {
+    final newReview = await _repository.addReview(
+      mapX: mapX,
+      mapY: mapY,
+      content: content,
+    );
+    state = [...state, newReview]; // 새로운 리뷰를 현재 상태에 추가
   }
 }
