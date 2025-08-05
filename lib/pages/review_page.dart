@@ -73,7 +73,7 @@ class ReviewPage extends ConsumerWidget {
                     child: TextField(
                       controller: controller,
                       decoration: const InputDecoration(
-                        hintText: '리뷰를 작성해주세요',
+                        //hintText: '리뷰를 작성해주세요',
                         border: OutlineInputBorder(),
                       ),
                     ),
